@@ -1,9 +1,9 @@
 import requests
 import os
 
-CLIENT_ID = "your_client_id"
-CLIENT_SECRET = "your_client_secret"
-REFRESH_TOKEN = "your_initial_refresh_token"  # Get via manual OAuth once
+CLIENT_ID = "170279"
+CLIENT_SECRET = "a028a8a02b7936d81cba8744da6c5df88e9d40de"
+REFRESH_TOKEN = "76047d15fa63dd26266f5d065d35418277a76cec"  # Get via manual OAuth once
 RUNS_DIR = "runs/"
 
 # Get a fresh access token
