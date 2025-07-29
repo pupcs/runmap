@@ -5,9 +5,9 @@ import json
 import gpxpy
 import gpxpy.gpx
 
-#CLIENT_ID = os.environ["CLIENT_ID"]
-#CLIENT_SECRET = os.environ["CLIENT_SECRET"]
-#REFRESH_TOKEN = os.environ["REFRESH_TOKEN"]
+CLIENT_ID = os.environ["CLIENT_ID"]
+CLIENT_SECRET = os.environ["CLIENT_SECRET"]
+REFRESH_TOKEN = os.environ["REFRESH_TOKEN"]
 RUNS_DIR = "runs/"
 
 CLIENT_ID = "170279"
