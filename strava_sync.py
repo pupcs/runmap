@@ -1,10 +1,16 @@
 import os
 import requests
+import json
 
 CLIENT_ID = os.environ["CLIENT_ID"]
 CLIENT_SECRET = os.environ["CLIENT_SECRET"]
 REFRESH_TOKEN = os.environ["REFRESH_TOKEN"]
 RUNS_DIR = "runs/"
+
+def save_index_file():
+    files = [f for f in os.listdir(RUNS_DIR) if f.endswith(".gpx")]
+    with open(os.path.join(RUNS_DIR, "index.json"), "w") as f:
+        json.dump(files, f)
 
 def get_access_token():
     response = requests.post("https://www.strava.com/oauth/token", data={
@@ -53,3 +59,4 @@ def download_runs():
 
 if __name__ == "__main__":
     download_runs()
+    save_index_file()
