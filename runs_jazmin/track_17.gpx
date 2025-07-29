@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no' ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+  <trk>
+    <trkseg>
+      <trkpt lat="48.20209801841068" lon="20.25759625464626">
+        <ele>173.70728067308664</ele>
+        <time>2024-11-10T13:55:13Z</time>
+      </trkpt>
+      <trkpt lat="48.20220230325664" lon="20.25758852151309">
+        <ele>172.9787709377706</ele>
+        <time>2024-11-10T13:55:17Z</time>
+      </trkpt>
+      <trkpt lat="48.20231586657354" lon="20.25756061213643">
+        <ele>172.28474862407893</ele>
+        <time>2024-11-10T13:55:22Z</time>
+      </trkpt>
+      <trkpt lat="48.2024234507646" lon="20.257571235937306">
+        <ele>174.2497951183468</ele>
+        <time>2024-11-10T13:55:24Z</time>
+      </trkpt>
+      <trkpt lat="48.20252983186191" lon="20.257559114886508">
+        <ele>173.36725959554315</ele>
+        <time>2024-11-10T13:55:30Z</time>
+      </trkpt>
+      <trkpt lat="48.20262937814661" lon="20.25753115143141">
+        <ele>173.3015311351046</ele>
+        <time>2024-11-10T13:55:35Z</time>
+      </trkpt>
+      <trkpt lat="48.20272875714301" lon="20.25752453962176">
+        <ele>173.1501486590132</ele>
+        <time>2024-11-10T13:55:47Z</time>
+      </trkpt>
+      <trkpt lat="48.2028221937507" lon="20.25751902514704">
+        <ele>173.32436083164066</ele>
+        <time>2024-11-10T13:55:52Z</time>
+      </trkpt>
+      <trkpt lat="48.20291639278887" lon="20.257492822770576">
+        <ele>173.7738139834255</ele>
+        <time>2024-11-10T13:55:56Z</time>
+      </trkpt>
+      <trkpt lat="48.203011855436664" lon="20.25749696709229">
+        <ele>173.89673402253538</ele>
+        <time>2024-11-10T13:56:01Z</time>
+      </trkpt>
+      <trkpt lat="48.203102497512305" lon="20.257486030438734">
+        <ele>173.84663006849587</ele>
+        <time>2024-11-10T13:56:08Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
