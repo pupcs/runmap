@@ -108,3 +108,17 @@ body {
 #settings-panel input[type="checkbox"] {
   margin-right: 6px;
 }
+
+.runner-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.runner-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}

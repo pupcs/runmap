@@ -15,10 +15,10 @@ function interpolateColor(color1, color2, factor) {
 
 // Slider presets
 const janosStart = "#0000ff";  // blue
-const janosEnd   = "#00ffff";  // cyan
+const janosEnd   = "#7fff2aff";  // cyan
 
-const jazminStart = "#ff00ff"; // pink
-const jazminEnd   = "#ff0000"; // red
+const jazminStart = "#810081ff"; // pink
+const jazminEnd   = "#ff12c8ff"; // red
 
 function getRunnerColors() {
   const fJanos = parseInt(document.getElementById("color-janos").value, 10) / 100;
