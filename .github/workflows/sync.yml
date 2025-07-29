@@ -38,5 +38,6 @@ jobs:
           git config user.email "actions@github.com"
           git add runs_janos/ runs_jazmin/
           git commit -m "Auto-sync Strava runs" || echo "No changes"
+          git config --unset-all http.https://github.com/.extraheader || true
           git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
-          git push origin HEAD:${{ github.ref_name }}
+          git push origin HEAD
