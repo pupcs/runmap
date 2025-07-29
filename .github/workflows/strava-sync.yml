@@ -36,6 +36,6 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add site/runs/ runs_janos/ runs_jazmin/
+          git add runs_janos/ runs_jazmin/
           git commit -m "Auto-sync Strava runs" || echo "No changes"
           git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }} HEAD:${{ github.ref_name }}
