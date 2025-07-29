@@ -3,11 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <title>Jazmin & Janos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="map"></div>
+
+  <div id="menu-toggle">☰</div>
+
+  <div id="settings-panel" class="hidden">
+    <div class="section">
+      <span class="section-label">Map Style:</span>
+      <div id="map-style-options">
+        <label>
+          <input type="radio" name="map-style" value="osm" checked>
+          <span>Street</span>
+        </label>
+        <label>
+          <input type="radio" name="map-style" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" name="map-style" value="dark">
+          <span>Dark</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="section">
+      <label>
+        Janos:
+        <input type="range" id="color-janos" min="0" max="100" value="0" />
+      </label>
+      <label>
+        Jazmin:
+        <input type="range" id="color-jazmin" min="0" max="100" value="0" />
+      </label>
+    </div>
+  </div>
+
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/@tmcw/togeojson"></script>
   <script src="script.js"></script>
