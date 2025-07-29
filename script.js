@@ -1,6 +1,6 @@
 const map = L.map('map').setView([0, 0], 2);
 
-// Base map layers
+// Base tile layers
 const tileLayers = [
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
@@ -16,13 +16,12 @@ const tileLayers = [
 let currentLayerIndex = 0;
 tileLayers[currentLayerIndex].addTo(map);
 
-// Allow double-click / double-tap to change base layer
+// Double-click and double-tap map switch
 function switchBaseMap() {
   map.removeLayer(tileLayers[currentLayerIndex]);
   currentLayerIndex = (currentLayerIndex + 1) % tileLayers.length;
   tileLayers[currentLayerIndex].addTo(map);
 }
-
 map.on('dblclick', switchBaseMap);
 
 let lastTap = 0;
@@ -34,7 +33,7 @@ map.getContainer().addEventListener('touchend', e => {
 
 const allCoords = [];
 
-// Helper function to load and draw runs
+// Load GPX files from a runner directory and draw them in the specified color
 function loadRunnerTracks(basePath, color) {
   return fetch(`${basePath}/index.json`)
     .then(res => {
@@ -54,7 +53,7 @@ function loadRunnerTracks(basePath, color) {
             geojson.features.forEach(feature => {
               const coords = feature.geometry.coordinates.map(c => [c[1], c[0]]);
               if (coords.length) {
-                allCoords.push(...coords);
+                allCoords.push(...coords); // Global coords across both runners
                 L.polyline(coords, { color }).addTo(map);
               }
             });
@@ -63,10 +62,10 @@ function loadRunnerTracks(basePath, color) {
     });
 }
 
-// Load both runners and adjust view after all are rendered
+// Load both runners' tracks and adjust the map view once all are loaded
 Promise.all([
   loadRunnerTracks('runs_janos', 'blue'),
-  loadRunnerTracks('runs_jazmin', 'pink')
+  loadRunnerTracks('runs_jazmin', 'magenta')
 ]).then(() => {
   if (allCoords.length > 0) {
     const bounds = L.latLngBounds(allCoords);
