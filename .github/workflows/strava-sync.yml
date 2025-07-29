@@ -22,12 +22,12 @@ jobs:
 
       - name: Run sync script
         env:
-          JANOS_CLIENT_ID: ${{ secrets.JANOS_CLIENT_ID }}
-          JANOS_CLIENT_SECRET: ${{ secrets.JANOS_CLIENT_SECRET }}
-          JANOS_REFRESH_TOKEN: ${{ secrets.JANOS_REFRESH_TOKEN }}
-          JAZMIN_CLIENT_ID: ${{ secrets.JAZMIN_CLIENT_ID }}
-          JAZMIN_CLIENT_SECRET: ${{ secrets.JAZMIN_CLIENT_SECRET }}
-          JAZMIN_REFRESH_TOKEN: ${{ secrets.JAZMIN_REFRESH_TOKEN }}
+          CLIENT_ID_JANOS: ${{ secrets.CLIENT_ID_JANOS }}
+          CLIENT_SECRET_JANOS: ${{ secrets.CLIENT_SECRET_JANOS }}
+          REFRESH_TOKEN_JANOS: ${{ secrets.REFRESH_TOKEN_JANOS }}
+          CLIENT_ID_JAZMIN: ${{ secrets.CLIENT_ID_JAZMIN }}
+          CLIENT_SECRET_JAZMIN: ${{ secrets.CLIENT_SECRET_JAZMIN }}
+          REFRESH_TOKEN_JAZMIN: ${{ secrets.REFRESH_TOKEN_JAZMIN }}
         run: python strava_sync.py
 
       - name: Commit new run files
