@@ -10,9 +10,6 @@ const tileLayers = [
   }),
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     attribution: '© OpenStreetMap, © Carto'
-  }),
-  L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {
-    attribution: 'Map tiles by Stamen Design — Map data © OpenStreetMap'
   })
 ];
 
