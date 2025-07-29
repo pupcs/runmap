@@ -64,8 +64,8 @@ function loadRunnerTracks(basePath, color) {
 
 // Load both runners' tracks and adjust the map view once all are loaded
 Promise.all([
-  loadRunnerTracks('runs_janos', 'blue'),
-  loadRunnerTracks('runs_jazmin', 'magenta')
+  loadRunnerTracks('runs_janos', '#250ff2'),
+  loadRunnerTracks('runs_jazmin', '#eb21d3')
 ]).then(() => {
   if (allCoords.length > 0) {
     const bounds = L.latLngBounds(allCoords);
