@@ -1,6 +1,6 @@
 const map = L.map('map').setView([0, 0], 2);
 
-// Define multiple base tile layers
+// Base map layers
 const tileLayers = [
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
@@ -14,65 +14,64 @@ const tileLayers = [
 ];
 
 let currentLayerIndex = 0;
-
-// Add the first tile layer
 tileLayers[currentLayerIndex].addTo(map);
 
-// Function to cycle to the next tile layer
+// Allow double-click / double-tap to change base layer
 function switchBaseMap() {
   map.removeLayer(tileLayers[currentLayerIndex]);
   currentLayerIndex = (currentLayerIndex + 1) % tileLayers.length;
   tileLayers[currentLayerIndex].addTo(map);
 }
 
-// Bind double-click and double-tap
 map.on('dblclick', switchBaseMap);
 
-// Basic mobile double-tap handling
 let lastTap = 0;
 map.getContainer().addEventListener('touchend', e => {
   const now = new Date().getTime();
-  if (now - lastTap < 300) {
-    switchBaseMap();
-  }
+  if (now - lastTap < 300) switchBaseMap();
   lastTap = now;
 });
+
 const allCoords = [];
 
-fetch('runs/index.json')
-  .then(res => {
-    if (!res.ok) throw new Error(`Failed to load index.json: ${res.status}`);
-    return res.json();
-  })
-  .then(runFiles => {
-    let filesLoaded = 0;
-
-    runFiles.forEach(file => {
-      fetch(`runs/${file}`)
-        .then(res => {
-          if (!res.ok) throw new Error(`Failed to load ${file}: ${res.status}`);
-          return res.text();
-        })
-        .then(xmlText => {
-          const xml = new DOMParser().parseFromString(xmlText, "text/xml");
-          const geojson = toGeoJSON.gpx(xml);
-          if (!geojson.features.length) return;
-
-          geojson.features.forEach(feature => {
-            const coords = feature.geometry.coordinates.map(c => [c[1], c[0]]);
-            if (coords.length) {
-              allCoords.push(...coords);
-              L.polyline(coords, { color: 'blue' }).addTo(map);
-            }
-          });
-
-          filesLoaded++;
-          if (filesLoaded === runFiles.length && allCoords.length > 0) {
-            const bounds = L.latLngBounds(allCoords);
-            map.fitBounds(bounds);
-          }
-        })
-        .catch(err => console.error(`Error processing ${file}:`, err));
+// Helper function to load and draw runs
+function loadRunnerTracks(basePath, color) {
+  return fetch(`${basePath}/index.json`)
+    .then(res => {
+      if (!res.ok) throw new Error(`Failed to load ${basePath}/index.json`);
+      return res.json();
+    })
+    .then(runFiles => {
+      return Promise.all(runFiles.map(file =>
+        fetch(`${basePath}/${file}`)
+          .then(res => {
+            if (!res.ok) throw new Error(`Failed to load ${file}`);
+            return res.text();
+          })
+          .then(xmlText => {
+            const xml = new DOMParser().parseFromString(xmlText, "text/xml");
+            const geojson = toGeoJSON.gpx(xml);
+            geojson.features.forEach(feature => {
+              const coords = feature.geometry.coordinates.map(c => [c[1], c[0]]);
+              if (coords.length) {
+                allCoords.push(...coords);
+                L.polyline(coords, { color }).addTo(map);
+              }
+            });
+          })
+      ));
     });
-  })
-  .catch(err => console.error("Error loading index.json:", err));
+}
+
+// Load both runners and adjust view after all are rendered
+Promise.all([
+  loadRunnerTracks('runs_janos', 'blue'),
+  loadRunnerTracks('runs_jazmin', 'pink')
+]).then(() => {
+  if (allCoords.length > 0) {
+    const bounds = L.latLngBounds(allCoords);
+    map.fitBounds(bounds);
+  }
+}).catch(err => {
+  console.error("Error loading runner tracks:", err);
+});
