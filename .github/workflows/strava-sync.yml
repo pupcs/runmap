@@ -1,0 +1,36 @@
+name: Sync Strava Runs
+
+on:
+  schedule:
+    - cron: '0 5 * * *'  # Every day at 05:00 UTC
+  workflow_dispatch:     # Allow manual trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run sync script
+        env:
+          CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.STRAVA_REFRESH_TOKEN }}
+        run: python sync/strava_sync.py
+
+      - name: Commit new run files
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add site/runs/
+          git commit -m "Auto-sync Strava runs" || echo "No changes"
+          git push
