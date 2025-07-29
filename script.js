@@ -106,3 +106,18 @@ document.querySelectorAll('input[name="map-style"]').forEach(el => {
 document.getElementById('color-janos').addEventListener('input', reloadAllTracks);
 document.getElementById('color-jazmin').addEventListener('input', reloadAllTracks);
 
+document.getElementById("toggle-janos").addEventListener("change", (e) => {
+  if (e.target.checked) {
+    janosLayerGroup.addTo(map);
+  } else {
+    map.removeLayer(janosLayerGroup);
+  }
+});
+
+document.getElementById("toggle-jazmin").addEventListener("change", (e) => {
+  if (e.target.checked) {
+    jazminLayerGroup.addTo(map);
+  } else {
+    map.removeLayer(jazminLayerGroup);
+  }
+});
