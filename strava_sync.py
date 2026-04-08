@@ -23,78 +23,78 @@ class Runner:
         })
         response.raise_for_status()
         return response.json()["access_token"]
-
-def download_runs(self):
-    token = self.get_access_token()
-    headers = {"Authorization": f"Bearer {token}"}
-
-    os.makedirs(self.runs_dir, exist_ok=True)
-
-    page = 1
-    per_page = 50
-
-    while True:
-        print(f"[{self.name}] Fetching page {page}...")
-
-        response = requests.get(
-            "https://www.strava.com/api/v3/athlete/activities",
-            headers=headers,
-            params={"per_page": per_page, "page": page}
-        )
-
-        activities = response.json()
-
-        if not activities:
-            print(f"[{self.name}] No more activities.")
-            break
-
-        for activity in activities:
-            if activity.get('type') != "Run":
-                continue
-
-            activity_id = activity["id"]
-            gpx_path = os.path.join(self.runs_dir, f"{activity_id}.gpx")
-
-            if os.path.exists(gpx_path):
-                print(f"[{self.name}] Reached existing activity {activity_id}, stopping.")
-                return
-
-            print(f"[{self.name}] Fetching GPS data for activity {activity_id}...")
-
-            stream_url = f"https://www.strava.com/api/v3/activities/{activity_id}/streams"
-            params = {"keys": "latlng,time", "key_by_type": "true"}
-            res = requests.get(stream_url, headers=headers, params=params)
-
-            if res.status_code != 200:
-                print(f"[{self.name}] Failed to fetch streams: {activity_id} (HTTP {res.status_code})")
-                continue
-
-            streams = res.json()
-            latlngs = streams.get("latlng", {}).get("data")
-            times = streams.get("time", {}).get("data")
-
-            if not latlngs or not times or len(latlngs) != len(times):
-                print(f"[{self.name}] Invalid GPS data for activity {activity_id}")
-                continue
-
-            # Build GPX
-            gpx = gpxpy.gpx.GPX()
-            track = gpxpy.gpx.GPXTrack()
-            segment = gpxpy.gpx.GPXTrackSegment()
-            track.segments.append(segment)
-            gpx.tracks.append(track)
-
-            start_time = datetime.datetime.strptime(activity["start_date"], "%Y-%m-%dT%H:%M:%SZ")
-            for offset, (lat, lon) in zip(times, latlngs):
-                point_time = start_time + datetime.timedelta(seconds=offset)
-                segment.points.append(gpxpy.gpx.GPXTrackPoint(lat, lon, time=point_time))
-
-            with open(gpx_path, "w") as f:
-                f.write(gpx.to_xml())
-
-            print(f"[{self.name}] Saved GPX: {gpx_path}")
-
-        page += 1
+    
+    def download_runs(self):
+        token = self.get_access_token()
+        headers = {"Authorization": f"Bearer {token}"}
+    
+        os.makedirs(self.runs_dir, exist_ok=True)
+    
+        page = 1
+        per_page = 50
+    
+        while True:
+            print(f"[{self.name}] Fetching page {page}...")
+    
+            response = requests.get(
+                "https://www.strava.com/api/v3/athlete/activities",
+                headers=headers,
+                params={"per_page": per_page, "page": page}
+            )
+    
+            activities = response.json()
+    
+            if not activities:
+                print(f"[{self.name}] No more activities.")
+                break
+    
+            for activity in activities:
+                if activity.get('type') != "Run":
+                    continue
+    
+                activity_id = activity["id"]
+                gpx_path = os.path.join(self.runs_dir, f"{activity_id}.gpx")
+    
+                if os.path.exists(gpx_path):
+                    print(f"[{self.name}] Reached existing activity {activity_id}, stopping.")
+                    return
+    
+                print(f"[{self.name}] Fetching GPS data for activity {activity_id}...")
+    
+                stream_url = f"https://www.strava.com/api/v3/activities/{activity_id}/streams"
+                params = {"keys": "latlng,time", "key_by_type": "true"}
+                res = requests.get(stream_url, headers=headers, params=params)
+    
+                if res.status_code != 200:
+                    print(f"[{self.name}] Failed to fetch streams: {activity_id} (HTTP {res.status_code})")
+                    continue
+    
+                streams = res.json()
+                latlngs = streams.get("latlng", {}).get("data")
+                times = streams.get("time", {}).get("data")
+    
+                if not latlngs or not times or len(latlngs) != len(times):
+                    print(f"[{self.name}] Invalid GPS data for activity {activity_id}")
+                    continue
+    
+                # Build GPX
+                gpx = gpxpy.gpx.GPX()
+                track = gpxpy.gpx.GPXTrack()
+                segment = gpxpy.gpx.GPXTrackSegment()
+                track.segments.append(segment)
+                gpx.tracks.append(track)
+    
+                start_time = datetime.datetime.strptime(activity["start_date"], "%Y-%m-%dT%H:%M:%SZ")
+                for offset, (lat, lon) in zip(times, latlngs):
+                    point_time = start_time + datetime.timedelta(seconds=offset)
+                    segment.points.append(gpxpy.gpx.GPXTrackPoint(lat, lon, time=point_time))
+    
+                with open(gpx_path, "w") as f:
+                    f.write(gpx.to_xml())
+    
+                print(f"[{self.name}] Saved GPX: {gpx_path}")
+    
+            page += 1
 
     def save_index_file(self):
         files = [f for f in os.listdir(self.runs_dir) if f.endswith(".gpx")]
