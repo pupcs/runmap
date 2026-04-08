@@ -35,11 +35,23 @@ jobs:
           CLIENT_SECRET_JAZMIN: ${{ secrets.CLIENT_SECRET_JAZMIN }}
           REFRESH_TOKEN_JAZMIN: ${{ secrets.REFRESH_TOKEN_JAZMIN }}
         run: python strava_sync.py
-
+      
+      - name: Debug files
+        run: |
+          ls -R runs_janos || true
+          ls -R runs_jazmin || true
+          
       - name: Commit new run files
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add runs_janos/ runs_jazmin/
-          git commit -m "Auto-sync Strava runs" || echo "No changes"
-          git push
+          git status
+          git diff --cached --name-only
+      
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-sync Strava runs"
+            git push
+          fi
