@@ -27,13 +27,38 @@ class Runner:
     def download_runs(self):
         token = self.get_access_token()
         headers = {"Authorization": f"Bearer {token}"}
-
-        print(f"[{self.name}] Fetching activities...")
-        response = requests.get(
-            "https://www.strava.com/api/v3/athlete/activities",
-            headers=headers,
-            params={"per_page": 50, "page": 1}
-        )
+        page = 1
+        per_page = 50
+        
+        while True:
+            print(f"[{self.name}] Fetching page {page}...")
+            
+            response = requests.get(
+                "https://www.strava.com/api/v3/athlete/activities",
+                headers=headers,
+                params={"per_page": per_page, "page": page}
+            )
+        
+            activities = response.json()
+        
+            if not activities:
+                print(f"[{self.name}] No more activities.")
+                break
+        
+            for activity in activities:
+                if activity.get('type') != "Run":
+                    continue
+        
+                activity_id = activity["id"]
+                gpx_path = os.path.join(self.runs_dir, f"{activity_id}.gpx")
+        
+                if os.path.exists(gpx_path):
+                    print(f"[{self.name}] Reached existing activity {activity_id}, stopping.")
+                    return  # IMPORTANT: stop when you hit known data
+        
+                # --- existing GPX logic continues here ---
+        
+            page += 1
 
         try:
             activities = response.json()
