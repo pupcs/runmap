@@ -24,58 +24,29 @@ class Runner:
         response.raise_for_status()
         return response.json()["access_token"]
 
-    def download_runs(self):
-        token = self.get_access_token()
-        headers = {"Authorization": f"Bearer {token}"}
-        page = 1
-        per_page = 50
-        
-        while True:
-            print(f"[{self.name}] Fetching page {page}...")
-            
-            response = requests.get(
-                "https://www.strava.com/api/v3/athlete/activities",
-                headers=headers,
-                params={"per_page": per_page, "page": page}
-            )
-        
-            activities = response.json()
-        
-            if not activities:
-                print(f"[{self.name}] No more activities.")
-                break
-        
-            for activity in activities:
-                if activity.get('type') != "Run":
-                    continue
-        
-                activity_id = activity["id"]
-                gpx_path = os.path.join(self.runs_dir, f"{activity_id}.gpx")
-        
-                if os.path.exists(gpx_path):
-                    print(f"[{self.name}] Reached existing activity {activity_id}, stopping.")
-                    return  # IMPORTANT: stop when you hit known data
-        
-                # --- existing GPX logic continues here ---
-        
-            page += 1
+def download_runs(self):
+    token = self.get_access_token()
+    headers = {"Authorization": f"Bearer {token}"}
 
-        try:
-            activities = response.json()
-        except ValueError:
-            print(f"[{self.name}] Failed to decode activities response.")
-            print(response.text)
-            return
+    os.makedirs(self.runs_dir, exist_ok=True)
 
-        if not isinstance(activities, list):
-            print(f"[{self.name}] Unexpected response format:", activities)
-            return
+    page = 1
+    per_page = 50
+
+    while True:
+        print(f"[{self.name}] Fetching page {page}...")
+
+        response = requests.get(
+            "https://www.strava.com/api/v3/athlete/activities",
+            headers=headers,
+            params={"per_page": per_page, "page": page}
+        )
+
+        activities = response.json()
 
         if not activities:
-            print(f"[{self.name}] No activities found.")
-            return
-
-        os.makedirs(self.runs_dir, exist_ok=True)
+            print(f"[{self.name}] No more activities.")
+            break
 
         for activity in activities:
             if activity.get('type') != "Run":
@@ -85,8 +56,8 @@ class Runner:
             gpx_path = os.path.join(self.runs_dir, f"{activity_id}.gpx")
 
             if os.path.exists(gpx_path):
-                print(f"[{self.name}] Skipping existing GPX: {activity_id}.gpx")
-                continue
+                print(f"[{self.name}] Reached existing activity {activity_id}, stopping.")
+                return
 
             print(f"[{self.name}] Fetching GPS data for activity {activity_id}...")
 
@@ -106,7 +77,7 @@ class Runner:
                 print(f"[{self.name}] Invalid GPS data for activity {activity_id}")
                 continue
 
-            # Build GPX structure
+            # Build GPX
             gpx = gpxpy.gpx.GPX()
             track = gpxpy.gpx.GPXTrack()
             segment = gpxpy.gpx.GPXTrackSegment()
@@ -122,6 +93,8 @@ class Runner:
                 f.write(gpx.to_xml())
 
             print(f"[{self.name}] Saved GPX: {gpx_path}")
+
+        page += 1
 
     def save_index_file(self):
         files = [f for f in os.listdir(self.runs_dir) if f.endswith(".gpx")]
